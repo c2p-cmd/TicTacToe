@@ -23,6 +23,7 @@ import kotlin.system.exitProcess
 
 
 const val SIDE = 69.0
+const val BOARD_THICKNESS = 3.0
 
 class Controller {
     @FXML
@@ -68,7 +69,32 @@ class Controller {
             repeat(3) { j ->
                 gameBoard[j][i] = Tile().apply { translateX = j * SIDE; translateY = i * SIDE }
 
+                // transparent rectangles to add X & O
                 gamePane.children.add(gameBoard[j][i])
+
+                if (j > 0) {
+                    // horizontal lines
+                    gamePane.children.add(Line().apply {
+                        // coordinates
+                        startX = i * SIDE; endX = (i + 1) * SIDE
+                        startY = j * SIDE; endY = j * SIDE
+
+                        // color
+                        stroke = Color.CHOCOLATE
+                        strokeWidth = BOARD_THICKNESS
+                    })
+
+                    // vertical lines
+                    gamePane.children.add(Line().apply {
+                        // coordinates
+                        startX = j*SIDE; endX = j*SIDE
+                        startY = 0.0; endY = 3*SIDE
+
+                        // color
+                        stroke = Color.CHOCOLATE
+                        strokeWidth = BOARD_THICKNESS
+                    })
+                }
             }
         }
 
@@ -149,8 +175,7 @@ class Controller {
 
         init {
             val border = Rectangle(SIDE, SIDE).apply {
-                fill = Color.TRANSPARENT; stroke = Color.CHOCOLATE
-                strokeWidth = 3.0
+                fill = Color.TRANSPARENT; stroke = Color.TRANSPARENT
             }
             alignment = Pos.CENTER
             children.addAll(border, text)
