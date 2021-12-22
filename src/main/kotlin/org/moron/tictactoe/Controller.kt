@@ -4,7 +4,6 @@ import javafx.animation.*
 import javafx.fxml.FXML
 
 import javafx.geometry.Pos
-import javafx.scene.control.Alert
 
 import javafx.scene.control.Label
 import javafx.scene.layout.*
@@ -24,17 +23,6 @@ import kotlin.system.exitProcess
 
 
 const val SIDE = 69.0
-
-private fun gameOver(winner: String, isDraw: Boolean): Unit =
-    Alert(Alert.AlertType.INFORMATION).let { alert ->
-        alert.title = "Game Over!"
-        alert.headerText = "Game Is Over"
-        if (isDraw)
-            alert.contentText = "Well played the both of you!\nBut, it is a draw."
-        else
-            alert.contentText = "Well played the both of you!\nThe winner is $winner"
-        alert.show()
-    }
 
 class Controller {
     @FXML
@@ -72,17 +60,15 @@ class Controller {
 
     private val combosPossible = ArrayList<Controller.Combo>()
 
-    private val gameBoard: Array<Array<Tile>> = Array(3) { Array(3) { Tile() } }
+    private val gameBoard = Array(3) { Array(3) { Tile() } }
 
     fun createEmptyBoard() {
+        // adding tiles to gamePane && gameBoard
         repeat(3) { i ->
             repeat(3) { j ->
-                // adding tiles to gamePane && gameBoard
-                val tile = Tile().apply { translateX = j * SIDE; translateY = i * SIDE }
+                gameBoard[j][i] = Tile().apply { translateX = j * SIDE; translateY = i * SIDE }
 
-                gamePane.children.add(tile)
-
-                gameBoard[j][i] = tile
+                gamePane.children.add(gameBoard[j][i])
             }
         }
 
@@ -109,21 +95,10 @@ class Controller {
             node is Tile && node.children.filterIsInstance<Text>().all(Text::isAccessibleTextNotNull)
         }
 
-        if (combosPossible.any(completedComboFlag)) {
-            val winner = if (turnX) "O" else "X"
-
+        if (combosPossible.any(completedComboFlag) || isGameDraw) {
             playable = false
             turnText.text = "Game Over!"
             playWinAnimation(combosPossible.find(completedComboFlag))
-
-            gameOver(winner, false)
-            return
-        }
-
-        if (isGameDraw) {
-            playable = false
-            turnText.text = "Game Over!"
-            gameOver("draw", true)
             return
         }
     }
@@ -183,33 +158,33 @@ class Controller {
             text.font = Font.font(50.0)
 
             setOnMouseClicked {
-                if (!playable || isDrawn())
+                if (!playable || isDrawn()) // if game is over or the clicked space is already occupied
                     return@setOnMouseClicked
 
-                if (turnX) {
+                turnX = if (turnX) {
                     drawX()
-                    turnX = false
                     turnText.text = "\"O Turn\""
+                    !turnX
                 } else {
                     drawO()
-                    turnX = true
                     turnText.text = "\"X Turn\""
+                    !turnX
                 }
 
                 checkState()
             }
         }
 
-        private fun drawX() {
-            text.text = "X"
-            text.accessibleText = "X"
-            text.fill = Color.MEDIUMVIOLETRED
+        private fun drawX() = text.apply {
+            fill = Color.MEDIUMVIOLETRED
+            text = "X"
+            accessibleText = "X"
         }
 
-        private fun drawO() {
-            text.text = "O"
-            text.accessibleText = "O"
-            text.fill = Color.FUCHSIA
+        private fun drawO() = text.apply {
+            fill = Color.FUCHSIA
+            text = "O"
+            accessibleText = "O"
         }
     }
 
