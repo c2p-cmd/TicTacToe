@@ -7,7 +7,3 @@ This is an implementation of the classic game of _**TicTacToe**_\
 A 2 player game where, whoever gets their pieces aligned up first wins!
 
 ## Screenshots
-
-![](../../../../Pictures/Screenshot from 2021-12-22 19-17-38.png)
-![](../../../../Pictures/Screenshot from 2021-12-22 19-17-55.png)
-![](../../../../Pictures/Screenshot from 2021-12-22 19-18-44.png)
