@@ -39,18 +39,18 @@ class Controller {
         exitProcess(0)
 
     @FXML
-    private fun resetBtnAction() {
+    private fun resetBtnAction(): Unit =
         repeat (3) { i ->
             repeat (3) { j ->
                 gameBoard[j][i].setValue(null)
                 gameBoard[j][i].resetAccessibleText()
             }
+        }.also {
+            playable = true
+            turnX = true
+            turnText.text = "\"X Turn\""
+            gamePane.children.remove(line)
         }
-        playable = true
-        turnX = true
-        turnText.text = "\"X Turn\""
-        gamePane.children.remove(line)
-    }
 
     private var line: Line = Line()
 
