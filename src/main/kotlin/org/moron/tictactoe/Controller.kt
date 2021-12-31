@@ -73,27 +73,28 @@ class Controller {
                 gamePane.children.add(gameBoard[j][i])
 
                 if (j > 0) {
-                    // horizontal lines
-                    gamePane.children.add(Line().apply {
-                        // coordinates
-                        startX = i * SIDE; endX = (i + 1) * SIDE
-                        startY = j * SIDE; endY = j * SIDE
+                    gamePane.children.addAll(
+                        // horizontal lines
+                        Line().apply {
+                            // coordinates
+                            startX = i * SIDE; endX = (i + 1) * SIDE
+                            startY = j * SIDE; endY = j * SIDE
 
-                        // color
-                        stroke = Color.CHOCOLATE
-                        strokeWidth = BOARD_THICKNESS
-                    })
+                            // color
+                            stroke = Color.CHOCOLATE
+                            strokeWidth = BOARD_THICKNESS
+                        },
+                        // vertical lines
+                        Line().apply {
+                            // coordinates
+                            startX = j*SIDE; endX = j*SIDE
+                            startY = 0.0; endY = 3*SIDE
 
-                    // vertical lines
-                    gamePane.children.add(Line().apply {
-                        // coordinates
-                        startX = j*SIDE; endX = j*SIDE
-                        startY = 0.0; endY = 3*SIDE
-
-                        // color
-                        stroke = Color.CHOCOLATE
-                        strokeWidth = BOARD_THICKNESS
-                    })
+                            // color
+                            stroke = Color.CHOCOLATE
+                            strokeWidth = BOARD_THICKNESS
+                        }
+                    )
                 }
             }
         }
@@ -130,7 +131,8 @@ class Controller {
     }
 
     private fun playWinAnimation(combo: Combo?) {
-        if (combo == null) return
+        if (combo == null)
+            return
 
         line = Line().apply {
             stroke = Color.DARKTURQUOISE
@@ -177,6 +179,7 @@ class Controller {
             val border = Rectangle(SIDE, SIDE).apply {
                 fill = Color.TRANSPARENT; stroke = Color.TRANSPARENT
             }
+
             alignment = Pos.CENTER
             children.addAll(border, text)
 
@@ -186,15 +189,14 @@ class Controller {
                 if (!playable || isDrawn()) // if game is over or the clicked space is already occupied
                     return@setOnMouseClicked
 
-                turnX = if (turnX) {
+                turnText.text = if (turnX) {
                     drawX()
-                    turnText.text = "\"O Turn\""
-                    !turnX
+                    "\"O Turn\""
                 } else {
                     drawO()
-                    turnText.text = "\"X Turn\""
-                    !turnX
+                    "\"X Turn\""
                 }
+                turnX = !turnX
 
                 checkState()
             }
